@@ -47,7 +47,7 @@ These are the major/most popular differential expression tools, there isn't a hu
 
 Networks in cellular biology tend are a graphical representation of the large-scale interacting genes/molecular species/regulatory elements. Such networks are composed of "nodes", which represent the genes/interactors and "edges", which are lines that represent such interactions. Nodes can have metadata associated with them (ie ontology, gene abundance, log-fold changes) and edges can be have values associated representing the strength of interaction (weighted) or just represent an interaction in a binary yes/no manner (unweighted). Edges can also show the directionality of interaction (are directed), ie whether gene A affects gene B, but B doesn't affect A, or can be undirected.
 
-A good introduction can be found here: https://www.ebi.ac.uk/training/online/course/network-analysis-protein-interaction-data-introduction
+A good introduction can be found here: https://www.ebi.ac.uk/training/online/course/network-analysis-protein-interaction-data-introduction \n
 A more advanced introduction can be found here: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4817425/
 
 **Co-expression methods**
