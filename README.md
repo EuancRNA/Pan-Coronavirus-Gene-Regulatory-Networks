@@ -16,6 +16,8 @@ Given the short timescale between when SARS-Cov-2 was first discovered and when 
 **Euan McDonnell (Team Lead)**
 I'm a computational biology PhD student based at the University of Leeds. My interests lie in transcriptomics, gene expression, virology, pathway analyses, multiomics integration and network analyses. My PhD project is focused on investigating dys-regulated ncRNA networks during lytic reactivation of the oncogenic y-herpesvirus Kaposi's Sarcoma-associated Herpesvirus using various transcriptomic and proteomic datasets. 
 
+**Tayab Soomro (Participant)**
+I'm a Bioinformatics undergraduate student at the University of Saskatchewan in Canada. I am also a Bioinformatician at Agriculture and Agri-Food Canada (AAFC) working on genome assembly and annotation projects. I am interested to explore various projects within the scope of bioinformatics.
 
 ## Useful Resources 
 
