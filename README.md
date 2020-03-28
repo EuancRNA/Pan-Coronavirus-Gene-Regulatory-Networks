@@ -9,7 +9,7 @@ Given the short timescale between when SARS-Cov-2 was first discovered and when 
 ## *Objectives*
 * Identification of data will be important, as even for previous coronaviruses (MERS,SARS), data is limiting and heterogenous in technology (Microarray, SILAC, Next-Gen Sequencing, Third-Gen Sequencing etc), source (proteomics vs transcriptomes etc) and cell-lines/conditions (tissue culture, primary cell line, clinical samples etc). We will mine OmicsDI, ArrayExpress etc for this data and perform various clustering analyses to remove outliers. This may need to be done prior to the official hackathon. 
 * Identification of genes/modules where there is evidence for their dysregulation during SARS-Cov-2019 infection, to compare back to the consensus network predictions. This will be accomplished via a literature search.
-* Differential expression analyses on the various datasets will provide a relatively simplistic but still informative indication of what gene-sets are dys-regulated by all coronaviruses.
+* Differential expression analyses on the various datasets will provide a relatively simplistic but still informative indication of what gene-sets are dys-regulated during infection by all coronaviruses.
 * Construction of network models and identification of consensus modules/pathways in order to determine possible pan-coronavirus dysregulated modules/gene sets, using tools/packages such as WGCNA, ARACNE etc.
 
 ## *The Team*
