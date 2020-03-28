@@ -27,20 +27,20 @@ I'm a computational biology PhD student based at the University of Leeds. My int
 
 Many of these databases are redundant, meaning that the same datasets will appear in each. If searching, check the data table and include new codes (E-GEOD-XXXX or GSEXXXXX) that correspond to the dataset, in the correcct column. Then download all data associated with the dataset, ie raw/processed data and metadata file. 
 
-OmicsDI:      https://www.omicsdi.org/
-ArrayExpress: https://www.ebi.ac.uk/arrayexpress/
-SRA:          https://www.ncbi.nlm.nih.gov/sra/
-GEO:          https://www.ncbi.nlm.nih.gov/geo/
+* OmicsDI:      https://www.omicsdi.org/
+* ArrayExpress: https://www.ebi.ac.uk/arrayexpress/
+* SRA:          https://www.ncbi.nlm.nih.gov/sra/
+* GEO:          https://www.ncbi.nlm.nih.gov/geo/
 
 
 ### Differential expression
 
 These are the major/most popular differential expression tools, there isn't a huge amount of variety in how they operate and they tend to provide highly similar results. Where they do vary tends to be in normalisation; so it'd probably be best to normalise raw data using the same method and use the same tool for differential expression analyses.
 
-DESeq2:     http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
-edgeR:      https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf
-limma:      https://kasperdanielhansen.github.io/genbioconductor/html/limma.html
-limma-voom: https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html
+* DESeq2:     http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
+* edgeR:      https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf
+* limma:      https://kasperdanielhansen.github.io/genbioconductor/html/limma.html
+* limma-voom: https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html
 
 
 ### Network Construction
@@ -51,5 +51,5 @@ A good introduction can be found here: https://www.ebi.ac.uk/training/online/cou
 A more advanced introduction can be found here: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4817425/
 
 **Co-expression methods**
-WGCNA:  https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
-ARACNE: http://califano.c2b2.columbia.edu/aracne
+* WGCNA:  https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
+* ARACNE: http://califano.c2b2.columbia.edu/aracne
