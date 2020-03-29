@@ -34,10 +34,10 @@ Many of these databases are redundant, meaning that the same datasets will appea
 ### Literature Databases
 
 **_CORD-19_**: https://pages.semanticscholar.org/coronavirus-research
-COVID-19 Open Research Dataset. A database set up by the Allen Institute for AI containing 45,000 scholarly articles on SARS-CoV-2 and associated coronaviruses, updated weekly as new peer-reviewed & preprint articles are published. The whole dataset can be downloaded, else the databased can be queried via the search engine: https://cord-19.apps.allenai.org/. It's GitHub repo can be found here https://github.com/echen102/COVID-19-TweetIDs.
+COVID-19 Open Research Dataset. A database set up by the Allen Institute for AI containing 45,000 scholarly articles on SARS-CoV-2 and associated coronaviruses, updated weekly as new peer-reviewed & preprint articles are published. The whole dataset can be downloaded, else the databased can be queried via the search engine: https://cord-19.apps.allenai.org/.
 
 **_WHO COVID-2019_**: https://www.who.int/emergencies/diseases/novel-coronavirus-2019/global-research-on-novel-coronavirus-2019-ncov
-A database curated by the WHO via manual searching of the table of contents of relevant journals and track down other related scientific articles that enrich the dataset. YOu can query the database or download the whole set.
+A database curated by the WHO via manual searching of the table of contents of relevant journals and track down other related scientific articles that enrich the dataset. You can query the database or download the whole set.
 
 
 ### Differential expression
