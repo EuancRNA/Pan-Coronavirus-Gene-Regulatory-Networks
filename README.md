@@ -33,11 +33,14 @@ Many of these databases are redundant, meaning that the same datasets will appea
 
 ### Differential expression
 
-These are the major/most popular differential expression tools, there isn't a huge amount of variety in how they operate and they tend to provide highly similar results. Where they do vary tends to be in normalisation; so it'd probably be best to normalise raw data using the same method and use the same tool for differential expression analyses.
+These are the major/most popular differential expression tools, there isn't a huge amount of variety in how they operate and they tend to provide highly similar results. Where they do vary tends to be in normalisation; so it'd probably be best to normalise raw data using the same method and use the same tool for differential expression analyses. However, limma tends to be good for cases where there are a low number of replicates.
 
+**_Microarray_**
+* limma:      https://kasperdanielhansen.github.io/genbioconductor/html/limma.html
+
+**_RNA-seq (count data)_**
 * DESeq2:     http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
 * edgeR:      https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf
-* limma:      https://kasperdanielhansen.github.io/genbioconductor/html/limma.html
 * limma-voom: https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html
 
 
