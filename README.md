@@ -19,6 +19,9 @@ I'm a computational biology PhD student based at the University of Leeds. My int
 **Tayab Soomro (Participant)**
 I'm a Bioinformatics undergraduate student at the University of Saskatchewan in Canada. I am also a Bioinformatician at Agriculture and Agri-Food Canada (AAFC) working on genome assembly and annotation projects. I am interested to explore various projects within the scope of bioinformatics.
 
+**Layla Hosseini-Gerami (Partipant)**
+I'm a PhD student based at the Centre for Molecular Informatics at the University of Cambridge in the areas of bioinformatics and cheminformatics. My work focuses on network/systems biology methods using gene expression and molecular interaction (e.g. protein-protein interaction) data to understand drug mechanism of action. 
+
 ## Useful Resources 
 
 ### Gene Expression/Omics Databases
