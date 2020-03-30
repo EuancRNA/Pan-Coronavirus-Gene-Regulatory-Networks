@@ -66,3 +66,8 @@ Networks in cellular biology tend are a graphical representation of the large-sc
 **Co-expression methods**
 * WGCNA:  https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
 * ARACNE: http://califano.c2b2.columbia.edu/aracne
+
+**Network-based Module Detection**
+* DOMINO: https://www.biorxiv.org/content/10.1101/2020.03.10.984963v2.full
+
+
