@@ -67,6 +67,14 @@ Networks in cellular biology tend are a graphical representation of the large-sc
 * WGCNA:  https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
 * ARACNE: http://califano.c2b2.columbia.edu/aracne
 
+**Time-Series**
+* SMARTS: https://academic.oup.com/bioinformatics/article/31/8/1250/212503?fbclid=IwAR3ddRpNP1g451UpNws4YZPNZE91x5tl378eXmkOH60nFwJj7DbBpguLohU
+
+
+### Module Detection
+
+Once a network has been constructed, the usual next step is to identify gene modules, or sets/groups of genes that are highly interconnected and usually function in the same/similar pathways. There are a plethora of methods for this that use ontological data and network metrics to identify such modules.
+
 **Network-based Module Detection**
 * DOMINO: https://www.biorxiv.org/content/10.1101/2020.03.10.984963v2.full
 
