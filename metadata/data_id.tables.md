@@ -4,7 +4,7 @@
 ## *Arranged by Virus & 'Omics Technology*
 
 |Virus| Microarray |RNA-seq|ChIP-Seq|Proteomics|Nanopore|
-|-----|------------|-------|--------|----------|        |
+|-----|------------|-------|--------|----------|--------|
 |**SARS** |E-GEOD-1739 |       |        |          |          |   
 |     |E-GEOD-45042|       |        |          |          |
 |     |E-GEOD-17400|       |        |          |          |
