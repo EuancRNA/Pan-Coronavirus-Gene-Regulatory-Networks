@@ -80,3 +80,9 @@ Once a network has been constructed, the usual next step is to identify gene mod
 * DOMINO: https://www.biorxiv.org/content/10.1101/2020.03.10.984963v2.full
 
 
+### Other Useful Resources
+
+**_Big Analysis_**: Has been made free for use searching for SARS-CoV-2-related publications. It's an analytical tool that identifying papers containing phrases related to the query and returns analyses of the content of such papers. https://www.storkapp.me/meta/index-covid19.php 
+
+
+
