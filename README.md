@@ -74,11 +74,31 @@ Networks in cellular biology are a graphical representation of the large-scale i
 
 ### Module Detection
 
-Once a network has been constructed, the usual next step is to identify gene modules, or sets/groups of genes that are highly interconnected and usually function in the same/similar pathways. There are a plethora of methods for this that use ontological data and network metrics to identify such modules.
+Once a network has been constructed, the usual next step is to identify gene modules, or sets/groups of genes that are highly interconnected and usually function in the same/similar pathways. There are a plethora of methods for this that use ontological data and network metrics to identify such modules. These modules can be functionally enriched to understand the processes and pathways being perturbed in a particular disease.
 
 **Network-based Module Detection**
-* DOMINO: https://www.biorxiv.org/content/10.1101/2020.03.10.984963v2.full
 
+Delineates subnetworks that carry out distinct biological endpoints, in contrast to standard pathway enrichment. Amplifies weak signals where active module comprises multiple nodes that individually only have marginal scores, but collectively score significantly higher
+
+* DOMINO: https://www.biorxiv.org/content/10.1101/2020.03.10.984963v2.full
+  * Outperforms other NBMD methods according to several benchmarking metrics (false positive rate, biological richness, etc.)
+  * Integrate PPI network with genes flagged as 'active' or differentially expressed in a dataset
+	* Find disjoint connected subnetworks in which active genes are enriched
+  * Report as final modules those that are enriched for active genes
+
+### Driver/disease gene identification
+
+Networks can also be analysed for driver genes or disease genes, to find genes that drive phenotypes or are highly related to a disease, and may thus be targeted (e.g. inhibited) with compounds. If this is performed across the different viruses, we can generate a set of 'coronavirus-associated driver/disease genes'.
+
+**Disease-Gene Identification**
+* EdgCSN: Ensemble disease gene prediction by clinical sample-based networks: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-020-3346-8
+  * Sample-specific disease-related PPI networks constructed by combining expression data and public PPI networks. They are then fused based on hierarchical clustering into groups of sample-specific networks. 
+  * Network-based features e.g. centrality measures are then used in a model to predict the probability of each gene in the network being a 'disease gene'.
+  
+**Driver Gene Identification**
+* Causal reasoning (various methods e.g. CausalR, CARNIVAL)
+  * Finds proteins in a PPI network which, when perturbed in a certain direction, maximally and accurately explain observed transcriptional changes
+  * Input usually DEGs from one experiment, but can also perform e.g. WGCNA to integrate different samples and find gene modules which are then thmselves used as input (as was performed here, in the case of identifying a new disease target https://www.nature.com/articles/s41467-018-06008-4)
 
 ### Miscellaneous Useful Resources
 
