@@ -60,6 +60,16 @@ These are the major/most popular differential expression tools, there isn't a hu
 * limma-voom: https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html
 
 
+### Pathway-Level Understanding 
+
+Understanding genes differentially regulated in terms of the shared processes of the gene products. Pathway enrichment in itself is quite basic but can be very insightful, especially when combined with the below (e.g. pathway enrichment of network modules. However, one tool called "PLIER" is useful for decomposing gene expression matrices (genes x samples) into a product of a small number of latent variables and their corresponding gene associations or loadings, while constraining the loadings to align with the most relevant automatically selected subset of prior knowledge.
+
+PLIER: https://www.nature.com/articles/s41592-019-0456-1
+
+gep2pep creates pathway-based expression profiles from gene expression data. Then you can go one step further and perform gene2drug which takes a matrix of samples and pathway scores, and finds drugs which modulate the same pathways (potential treatments?), similar to Connectivity Mapping.
+
+gep2pep: https://academic.oup.com/bioinformatics/article/36/6/1944/5606711
+
 ### Network Construction
 
 Networks in cellular biology are a graphical representation of the large-scale interacting genes/molecular species/regulatory elements. Such networks are composed of "nodes", which represent the genes/interactors and "edges", which are lines that represent such interactions. Nodes can have metadata associated with them (ie ontology, gene abundance, log-fold changes) and edges can be have values associated representing the strength of interaction (weighted) or just represent an interaction in a binary yes/no manner (unweighted). Edges can also show the directionality of interaction (are directed), ie whether gene A affects gene B, but B doesn't affect A, or can be undirected.
@@ -102,10 +112,13 @@ Networks can also be analysed for driver genes or disease genes, to find genes t
 * Causal reasoning (various methods e.g. CausalR, CARNIVAL)
   * Finds proteins in a PPI network which, when perturbed in a certain direction, maximally and accurately explain observed transcriptional changes
   * Input usually DEGs from one experiment, but can also perform e.g. WGCNA to integrate different samples and find gene modules which are then thmselves used as input (as was performed here, in the case of identifying a new disease target https://www.nature.com/articles/s41467-018-06008-4)
+* Bayesian methods 
+  * Construction of gene network and key driver analysis
+  * Detailed here https://pdfs.semanticscholar.org/75c1/23410d51b09cabd22a2aec06d5d60b7ed611.pdf
+  * Implemented here https://www.sciencedirect.com/science/article/pii/S2405471216300321?via%3Dihub
 
 ### Miscellaneous Useful Resources
 
 **_Big Analysis_**: Has been made free for use searching for SARS-CoV-2-related publications. It's an analytical tool that identifying papers containing phrases related to the query and returns analyses of the content of such papers. https://www.storkapp.me/meta/index-covid19.php 
-
 
 
