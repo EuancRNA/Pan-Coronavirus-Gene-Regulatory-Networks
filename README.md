@@ -43,6 +43,9 @@ COVID-19 Open Research Dataset. A database set up by the Allen Institute for AI 
 **_WHO COVID-2019_**: https://www.who.int/emergencies/diseases/novel-coronavirus-2019/global-research-on-novel-coronavirus-2019-ncov
 A database curated by the WHO via manual searching of the table of contents of relevant journals and track down other related scientific articles that enrich the dataset. You can query the database or download the whole set.
 
+**_COVID19-Figshare_**: https://covid19.figshare.com/
+A collation of data, reports and publications relating to the SARS-CoV-2 outbreak.
+
 
 ### Differential expression
 
