@@ -16,5 +16,5 @@
 |          |GSE81909   | Primary HAE cultures  | RNA microarray | Time-series | Airway Epithelia |*Homo sapiens* |  3 bio    | 0,12,24,36,48 hpi & mock            |
 |**_OC43_**|E-GEOD-13879| N-Tera2 | RNA microarray | Time-series | N-Tera2 differentiated human neuronal cell model | *Homo sapiens* | 2 bio, 2 tech | 24,48,72 hpi & mock |
 |**_299E_**|GSE89159    |A549 cells | RNA microarray | Infected vs Uninfected | Lung epithelial carcinoma cells | *Homo sapiens* | 1 bio  | 16, 24, 48 hpi, wt & heat-inactivated mock, 1 untreated mock, 1 IL-1 positive control |
-|          |GSE89166    |Huh7   | RNA microarray     | Infected vs Uninfected | Human hepatoma carcinoma cells | *Homo sapiens* | 2 bio  | Infected wt, heat-inactivated, mock, IL-1 positive control |
-|          |GSE89212    |Huh7   | RNA microarray     | Infected vs Uninfected | Human hepatoma carcinoma cells | *Homo sapiens* | 1 bio | Infected vs Uninfected, IL-1 positive, various Abs (ie H3K27ac, H3K36ac, H3K4me1, H4K5ac, p(S5) PolII, p65, Input) |
+|          |GSE89166    |Huh7   | RNA microarray     | Infected vs Uninfected | Human hepatoma carcinoma cells | *Homo sapiens* | 2 bio  | Infected wt, heat-inactivated, mock, IL-1 positive (1hr incubation) control |
+|          |GSE89212    |Huh7   | RNA microarray     | Infected vs Uninfected | Human hepatoma carcinoma cells | *Homo sapiens* | 1 bio | Infected vs Uninfected, IL-1 positive (1hr incubation) control, various Abs (ie H3K27ac, H3K36ac, H3K4me1, H4K5ac, p(S5) PolII, p65, Input) |
