@@ -20,7 +20,7 @@ We aim to do up to 3 different types of analyses, however will focus on the diff
 
 3. The final (and least necessary analysis) would involve leveraging the fact that most the data for SARS-CoV-1 and MERS is time-series and utilise time-series-specific network construction methods (Jump3, OKVAR-Boost, dynGENIE3) to generate network models for each virus. As before, these virus-specific networks could then be overlapped, modules identified and ontology analyses peformed before subsequent integration of SARS-CoV-2 data to identify pan-coronavirus dysregulated pathways.
 
-![**HackseqRNA Project Outline** : Three analytical pipelines are proposed, which will be followed in a hierachical manner, with *green* pipeline being the highest priority, followed by the *amber* and *red*.  ](/home/euan/Documents/other_projects/hackseqRNA/network_construction/pipeline.jpg)
+![**HackseqRNA Project Outline** : Three analytical pipelines are proposed, which will be followed in a hierachical manner, with *green* pipeline being the highest priority, followed by the *amber* and *red*.  ](https://github.com/EuancRNA/Pan-Coronavirus-Gene-Regulatory-Networks/blob/master/pipeline.jpg)
 
 <br />
 
