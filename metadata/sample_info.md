@@ -9,7 +9,6 @@
 |          |E-GEOD-45042| PMBC patient samples | RNA Microarray | Patient samples | Blood (PBMCs)    | *Homo sapiens* | 4 bio normal, 10 bio SARS   | Blood PBMCs sequenced                   |
 |          |E-GEOD-47960| Primary HAE cultures | RNA Microarray | Time-series     | Airway Epithelia | *Homo sapiens* | 3 bio                 | 0,12,24,36,48,60,72,84,96 hpi, mock     |
 |          |E-GEOD-47961| Calu-3 2B4           | RNA Microarray | Time-series     | T-Cell Hybridoma | *Homo sapiens* | 3 bio                 | 0,3,7,12,24,30,36,48,54,60,72 hpi, mock |
-|          |E-GEOD-37827| Calu-3               | RNA Microarray | Time-series     | T Cell Hybridoma | *Homo sapiens* | 3 bio                  | 0,7,12,24,30,36,48,54,60,72 hpi, mock   |
 |          |GSE37827| Calu-3      | RNA Microarray | Time-series | T Cell Hybridoma | *Homo sapiens* | 3 bio | 0,7,12,24,30,36,48,54,60,72 hpi, mock
 |**_MERS_**|E-GEOD-65574| Calu-3 2B4           | RNA Microarray | Time-series   | T-Cell Hybridoma | *Homo sapiens* | 3 bio               | 0,7,12,24 hpi & mock                    |
 |          |E-GEOD-56677    | Calu-3 2B4       | RNA Microarray | Time-series   | T-cell Hybridoma | *Homo sapiens* | 3 bio                 | 0,3,7,12,18,24 hpi & mock               |
