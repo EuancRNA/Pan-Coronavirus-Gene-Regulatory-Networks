@@ -2,7 +2,6 @@
 
 ### Task Assignments
 *Assigned tasks*
-
     * Huda --> DEG analysis
     * Euan --> Quality control, formatting, clustering of samples
     * Zuhaib --> Collation of interactome data from IntAct, Reactome etc
