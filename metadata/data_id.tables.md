@@ -14,7 +14,6 @@
 |     |E-GEOD-33267|       |        |          |          |
 |     |E-GEOD-37827|       |        |          |          |
 |     |E-GEOD-546  |       |        |          |          |
-|     |GSM4487936  |       |        |          |          |
 |     |            |       |        |          |          |
 |**MERS** |E-GEOD-65574|       |        |          |          |
 |     |GSE81909    |       |        |          |          |
@@ -28,6 +27,7 @@
 |     |GSE89160    |       |        |          |          |
 |     |            |       |        |          |          |
 |**SARS-CoV-2**|          |GSE147507|        |          |
+|     |GSM4487936  |       |        |          |          |
 
 **Interesting Sources**
 Paper released that does Nanopore RNA-seq & proteomics of SARS-CoV-2-infected Vero 6 cells: however they show that the polybasic Furin site is lost upon passaging. This site is important for viral tropism and pathogenicity, so might not be representative of the actual virus - https://zenodo.org/record/3722591#.XoUXr3VKjIU
