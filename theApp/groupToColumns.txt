@@ -1,0 +1,4 @@
+Group	File	Columns
+long_GSE148729_Calu3_mockInfection	data_GSE148729_Calu3_totalRNA/GSE148729_Calu3_totalRNA_readcounts.txt	14,15,16,17
+long_GSE148729_Calu3_sarsCov1	data_GSE148729_Calu3_totalRNA/GSE148729_Calu3_totalRNA_readcounts.txt	2,3,4,5,6,7
+long_GSE148729_Calu3_sarsCov2	data_GSE148729_Calu3_totalRNA/GSE148729_Calu3_totalRNA_readcounts.txt	8,9,10,11,12,13
