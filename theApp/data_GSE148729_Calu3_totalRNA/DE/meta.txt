@@ -1,0 +1,18 @@
+Cell	Infection	Time	Replicate
+Calu3_totalRNA.S1.4h.B	Calu3_totalRNA	S1	4h	B
+Calu3_totalRNA.S1.12h.A	Calu3_totalRNA	S1	12h	A
+Calu3_totalRNA.S1.12h.B	Calu3_totalRNA	S1	12h	B
+Calu3_totalRNA.S1.24h.A	Calu3_totalRNA	S1	24h	A
+Calu3_totalRNA.S1.24h.B	Calu3_totalRNA	S1	24h	B
+Calu3_totalRNA.S2.4h.A	Calu3_totalRNA	S2	4h	A
+Calu3_totalRNA.S2.4h.B	Calu3_totalRNA	S2	4h	B
+Calu3_totalRNA.S2.12h.A	Calu3_totalRNA	S2	12h	A
+Calu3_totalRNA.S2.12h.B	Calu3_totalRNA	S2	12h	B
+Calu3_totalRNA.S2.24h.A	Calu3_totalRNA	S2	24h	A
+Calu3_totalRNA.S2.24h.B	Calu3_totalRNA	S2	24h	B
+Calu3_totalRNA.mock.4h.A	Calu3_totalRNA	mock	4h	A
+Calu3_totalRNA.mock.4h.B	Calu3_totalRNA	mock	4h	B
+Calu3_totalRNA.mock.24h.A	Calu3_totalRNA	mock	24h	A
+Calu3_totalRNA.mock.24h.B	Calu3_totalRNA	mock	24h	B
+Calu3_totalRNA.untr.4h.A	Calu3_totalRNA	untr	4h	A
+Calu3_totalRNA.untr.4h.B	Calu3_totalRNA	untr	4h	B
