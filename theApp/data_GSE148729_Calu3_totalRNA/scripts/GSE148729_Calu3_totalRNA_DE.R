@@ -1,3 +1,7 @@
+###############################################
+# This script will perform DE analysis on the samples by comparing gene expression in adjacent time points in each group
+# mock infection, cov1 infection, and cov2 infection
+###############################################
 library(DESeq2)
 library(ggplot2)
 library(stringr)

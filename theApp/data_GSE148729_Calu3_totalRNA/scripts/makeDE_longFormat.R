@@ -1,4 +1,7 @@
-
+######################################
+# This script will take in the DE files anc convert them into long format
+# See README.md for details on the format
+######################################
 setwd("/home/zuhaib/Desktop/covid19Research/hackSeqRNA/theApp/data_GSE148729_Calu3_totalRNA/DE")
 
 fls <- list.files()[grep("h", list.files())]
