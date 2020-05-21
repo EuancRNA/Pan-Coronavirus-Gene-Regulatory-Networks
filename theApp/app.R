@@ -2,17 +2,19 @@ library(shiny)
 library(ggplot2)
 library(stringr)
 library(ggplot2)
-setwd("/home/zuhaib/Desktop/covid19Research/hackSeqRNA/theApp/data_GSE148729_Calu3_totalRNA/")
+setwd("/home/zuhaib/Desktop/covid19Research/hackSeqRNA/Pan-Coronavirus-Gene-Regulatory-Networks/theApp")
 
-# data <- read.table("../GSE148729_Calu3_totalRNA_readcounts.txt", header = T, sep = "\t")
-
-fls <- list.files()[grep("long_", list.files())]
+fls <- unlist(lapply(list.files()[grep("data_", list.files())], function(d) {
+  path <- paste0("./", d, "/")
+  filesInDir <- list.files(path)
+  return(paste0(path, filesInDir[grep("long_", filesInDir)]))
+}))
 datasets <- lapply(fls, function(x) {
   read.table(x, header = T, sep = "\t")
 })
 names(datasets) <- fls
 names(datasets) <- str_replace_all(names(datasets), "\\.txt", "")
-names(datasets) <- str_replace_all(names(datasets), "long_", "")
+names(datasets) <- str_replace_all(names(datasets), "\\..+long_", "")
 
 
 
@@ -20,17 +22,21 @@ names(datasets) <- str_replace_all(names(datasets), "long_", "")
 ui <- pageWithSidebar(
   
   # App title ----
-  headerPanel("Miles Per Gallon"),
+  headerPanel("Gene Expression Changes"),
   
   # Sidebar panel for inputs ----
   sidebarPanel(
     checkboxGroupInput("selDatasets", "Select Datasets", choices = names(datasets)),
     textAreaInput("selGenes", "Genes of Interest", height = "200px"),
+    radioButtons("collapseLines", label = "Collapse lines?",
+                 choices = list("Yes" = "yes", "No" = "no"), 
+                 selected = "no"),
     submitButton("Submit")
   ),
   
   # Main panel for displaying outputs ----
   mainPanel(
+    verbatimTextOutput("GNF"),
     uiOutput("Plots")
   )
 )
@@ -41,32 +47,56 @@ server <- function(input, output) {
   # Takes in the DE between time points of some gene, and returns x,y coordinates for the line
   # as well as the color of the points based on whether it was significantly expressed.
   # Note: Time points must be sorted
-  makeLine <- function(timePoints) {
+  makeLine <- function(timePoints, collapseLinesFlag = F) {
     minTimePoint <- timePoints[1,2]
+    # If the lines will collapse, then raise each y value to the power of to so lines don't clump together
+    if (collapseLinesFlag == T) {
+      yVals <- 2^c(0, cumsum(timePoints$log2FoldChange))
+    } else {
+      yVals <- c(0, cumsum(timePoints$log2FoldChange))
+    }
     retDF <- data.frame(x = c(minTimePoint, timePoints$T2),
-                        y = c(0, cumsum(timePoints$log2FoldChange)),
+                        y = yVals,
                         sig = c("Significant", timePoints$Colour),
                         gene = timePoints[1,1])
     return(retDF)
   }
   ########## FUNCTIONS ##########
   
+  
   # Based on the user-selected genes and datasets, creates a line for each gene in each dataset
   # Returns the line for each gene in each dataset (lns), also returns the max and min x and y values (useful for defining plot dimentions)
   # as well as the name of the datset (Name)
   dataToPlot <- reactive({
+    if (input$collapseLines == "yes") {
+      collapseFlag <- 0
+    } else {
+      collapseFlag <- 1
+    }
     return(lapply(input$selDatasets, function(y) {
       ds <- datasets[[y]]
-      lst <- lapply(strsplit(input$selGenes, split = '[\r\n]')[[1]], function(x) {
-        return(ds[grep(x, ds[,1]),])
+      genesOfInterest <- strsplit(input$selGenes, split = '[\r\n]')[[1]] 
+      lst <- lapply(genesOfInterest, function(x) {
+        ret <- ds[grep(x, ds[,1]),]
+        if (nrow(ret) == 0) {
+          return(NA)
+        } else {
+          return(ret)
+        }
       })
+      genesNotFound <- genesOfInterest[which(is.na(lst))]
+      lst <- lst[which(!is.na(lst))]
       lns <- lapply(lst, function(x) {
-        return(makeLine(x))
+        if (input$collapseLines == "yes") {
+          return(makeLine(x, T))
+        } else {
+          return(makeLine(x, F))
+        }
       })
       xMax <- max(unlist(lapply(lns, function(x) return(x[,1])))) + 1
       yMin <- min(unlist(lapply(lns, function(x) return(x[,2])))) - 1
-      yMax <- max(unlist(lapply(lns, function(x) return(x[,2])))) + length(lns)
-      return(list(Plot = lns, xMax = xMax, yMin = yMin, yMax = yMax, Name = y))
+      yMax <- max(unlist(lapply(lns, function(x) return(x[,2])))) + length(lns)*collapseFlag
+      return(list(Plot = lns, xMax = xMax, yMin = yMin, yMax = yMax, Name = y, notFound = genesNotFound, DS = y))
     }))
   })
   
@@ -74,14 +104,32 @@ server <- function(input, output) {
   # This is so the plot scales are consistent.
   plotWindow <- reactive({
     maxX <- max(unlist(lapply(dataToPlot(), function(x) return(x$xMax))))
+    minX <- -9
     minY <- min(unlist(lapply(dataToPlot(), function(x) return(x$yMin))))
     maxY <- max(unlist(lapply(dataToPlot(), function(x) return(x$yMax))))
-    return(list(right = maxX, left = -9, top = maxY, bottom = minY))
+    if (input$collapseLines == "yes") {
+      maxX <- maxX + 6
+      minX <- -0.5
+    } 
+    
+    return(list(right = maxX, left = minX, top = maxY, bottom = minY))
   })
-
+  
+  output$GNF <- renderPrint({
+    lapply(dataToPlot(), function(d) {
+      return(paste("In", d$DS, "we didn't find", d$notFound))
+    })
+  })
+  
   # Renders the plots. One plot for each selected dataset. The plot scales based on the max and min y-values
   output$Plots <- renderUI({
       lapply(dataToPlot(), function(d) {
+        if (input$collapseLines == "yes") {
+          collapseFlag <- 0
+        } else {
+          collapseFlag <- 1
+        }
+        
         vShift <- 0
         renderPlot({
           plot(1, type="n", xlab="Time (h)", ylab="", xlim=c(plotWindow()$left, plotWindow()$right), ylim=c(plotWindow()$bottom, plotWindow()$top), main = d$Name)
@@ -92,10 +140,12 @@ server <- function(input, output) {
                   col = sapply(i$sig, function(x) if (x == "Significant") return("black") else return("yellow")),
                   cex = 2,
                   pch = 16)
-            text(-5, vShift, labels = i$gene)
-            vShift <- vShift + 1
+            text(-5*collapseFlag + (1 - collapseFlag)*((i$x[length(i$x)]) + 3), 
+                 vShift*collapseFlag + (1 - collapseFlag)*(i$y[length(i$y)]), 
+                 labels = i$gene)
+            vShift <- vShift + collapseFlag
           }
-        }, height = (plotWindow()$top - plotWindow()$bottom) * (3100/(plotWindow()$top - plotWindow()$bottom) + 800) / 35)
+        }, height = max(20, (plotWindow()$top - plotWindow()$bottom) * (3100/(plotWindow()$top - plotWindow()$bottom) + 800) / 35))
       })
   })
 }
