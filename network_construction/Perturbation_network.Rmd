@@ -1,0 +1,397 @@
+---
+title: "Perturbation"
+author: "Euan_McDonnell"
+date: "22 May 2020"
+output: html_document
+---
+
+
+---
+title: "GeneMeta"
+author: "Euan_McDonnell"
+date: "21 May 2020"
+output: html_document
+---
+
+
+```{r}
+
+library("crossmeta")
+sars_names <- c("GSE37827","GSE33267")
+mers_names <- c("GSE56677")
+names <- c(sars_names,mers_names)
+
+data_dir <- paste(getwd(),"crossmeta",sep="/")
+Sys.setenv(TAR = "/bin/tar")
+
+# raw <- get_raw(names,data_dir)
+esets <- load_raw(names, data_dir)
+names(esets) <- names
+
+
+```
+
+
+```{r}
+
+ReadInMatrices <- function(gse_names)
+{
+  mtrix.files <- list.files(pattern="gn_id.txt")
+  exp.names <- gsub("[.].*","",mtrix.files)
+  files <- mtrix.files[exp.names %in% gse_names]
+  lapply(files, function(file)
+  {
+    mtrix <- read.table(file,header=TRUE,row.names=2)[,-1]
+  })
+}
+
+mtrixes <- ReadInMatrices(names)
+mtrixes <- lapply(mtrixes, function(x) x[,-1])
+names(mtrixes) <- names
+
+```
+
+
+
+
+```{r}
+
+library("biomaRt")
+ensembl <- useMart("ensembl",dataset="hsapiens_gene_ensembl")
+biomart <- getBM(attributes=c('uniprot_gn_id','ensembl_gene_id'),mart = ensembl)[-1,]
+colnames(biomart) <- c("ENSEMBLID","UNIPROTID")
+
+library("psych")
+ConvertIDs <- function(aggr)
+{
+  aggr["UNIPROTID"] <- rownames(aggr)
+  aggr <- merge(biomart,aggr,by="UNIPROTID")[,-1]
+  aggr <- aggregate(. ~ENSEMBLID, data=aggr,geometric.mean) 
+  rownames(aggr) <- aggr$ENSEMBLID
+  aggr
+}
+
+gse37827.ens <- ConvertIDs(mtrixes$GSE33267)
+gse56677.ens <- ConvertIDs(mtrixes$GSE56677)
+
+
+```
+
+
+
+
+```{r}
+
+library(Biobase)
+GetMetaData <- function(esets,gse_id,time_flag,virus_flag,mock,virus)
+{
+  group1 <- data.frame(row.names=rownames(pData(esets[gse_id][[1]])),
+                       ID=rownames(pData(esets[gse_id][[1]])),
+                       TIME=pData(esets[gse_id][[1]])[time_flag],
+                       TREATMENT=pData(esets[gse_id][[1]])[virus_flag],
+                       EXPERIMENT=rep(gse_id,nrow(pData(esets[gse_id][[1]]))),
+                       stringsAsFactors=FALSE)
+  colnames(group1) <- c("ID","TIME","TREATMENT","EXPERIMENT")
+  group1 <- group1[group1$TREATMENT == virus,]
+  group1
+}
+
+pgse37827 <- pData(esets$GSE37827)
+pgse37827 <- GetMetaData(esets,"GSE37827","characteristics_ch1","characteristics_ch1.1",
+                 "infection: mock infected","infection: SARS CoV Urbani infected")
+pgse37827$TIME <- gsub(".*: ","",pgse37827$TIME)
+
+pgse56677 <- pData(esets$GSE56677)
+pgse56677 <- GetMetaData(esets,"GSE56677","timepoint:ch1","infection:ch1","Mock  Infected","LoCoV")
+
+pdata <- do.call(rbind,list(pgse37827,pgse56677))
+
+```
+
+
+
+
+```{r}
+
+
+library(matrixStats)
+
+  
+ComputePerturbationScore <- function(pdata,n)
+{
+  mtrix <- as.matrix(n[,colnames(n) %in% rownames(pdata)])
+  rownames(mtrix) <- rownames(n)
+  colnames(mtrix) <- pdata$TIME
+  mtrix - rowMeans(mtrix)
+}
+
+p.37827 <- ComputePerturbationScore(pgse37827,gse37827.ens)
+p.56677 <- ComputePerturbationScore(pgse56677,gse56677.ens)
+
+
+ByTimeComputeThresh <- function(p.mtrix)
+{
+  p.merge <- do.call(cbind,lapply(unlist(unique(colnames(p.mtrix))), function(time)
+  {
+    by_time <- p.mtrix[,colnames(p.mtrix) == time]
+    time_point <- data.matrix(rowMeans(by_time))
+    colnames(time_point) <- time
+    time_point
+  }))
+  up.thresh <- (rowMeans(p.merge) + rowSds(p.merge) / 1)
+  dn.thresh <- (rowMeans(p.merge) - rowSds(p.merge) / 1)
+  p.merge <- cbind(p.merge,up.thresh,dn.thresh)
+}
+
+
+p.37827 <- ByTimeComputeThresh(p.37827)
+p.56677 <- ByTimeComputeThresh(p.56677)
+
+
+
+ApplyThresh <- function(p.merge,pdata)
+{
+  mtrix.filt <- matrix(unlist(apply(p.merge, 1, function(row)
+  {
+    lapply(row, function(element)
+    {
+      if (element > 0 & element < row[names(row) == "up.thresh"]) { element <- element }
+    else if (element < 0 & element > row[names(row) == "dn.thresh"]) { element <- element } 
+    else { element <- 0 }
+    })
+  })),ncol=ncol(p.merge),nrow=nrow(p.merge))
+  colnames(mtrix.filt) <- colnames(p.merge)
+  rownames(mtrix.filt) <- rownames(p.merge)
+  mtrix.filt <- mtrix.filt[,unique(pdata$TIME)]
+}
+
+filt.37827 <- ApplyThresh(p.37827,pgse37827)
+filt.56677 <- ApplyThresh(p.56677,pgse56677)
+
+
+```
+
+
+
+```{r}
+
+SaveTables <- function(gse_id,mtrix.filt)
+{
+  times <- colnames(mtrix.filt)
+  by_time <- lapply(times, function(time)
+  {
+    k <- mtrix.filt[,colnames(mtrix.filt) == time]
+    k <- data.frame(ENSEMBLID=names(k),X=k,stringsAsFactors=FALSE)
+    k <- k[k$X !=0,]
+    colnames(k) <- c("ENSEMBLID",time)
+    k
+  })
+  names(by_time) <- times
+  lapply(names(by_time), function(i) 
+  {
+    write.table(unname(by_time[names(by_time) == i]),paste(gse_id,".perturbation_time_series.",i,"r.txt",sep=""),sep="\t",quote=F)
+  })
+  by_time
+}
+
+
+by_time.37827 <- SaveTables("GSE37827",filt.37827)
+by_time.56677 <- SaveTables("GSE56677",filt.56677)
+
+```
+
+
+```{r}
+
+ReadInForGraph <- function(gse_id)
+{
+  file.match <- paste(gse_id,".*.perturbation_time_series.",sep="")
+  readin <- lapply(list.files(pattern=file.match), function(file)
+  {
+    read.table(file,header=TRUE,row.names=1)
+  })
+}
+
+gse37827.g <- ReadInForGraph("GSE37827") # SARS CALU3 DATASET
+gse56677.g <- ReadInForGraph("GSE56677") # MERS CALU3 DATASET
+
+
+
+```
+
+
+
+
+### Intersect and save gene sets by time
+
+```{r}
+
+
+SaveCombined <- function(by_time,filenames,times)
+{
+  less_time <- by_time[names(by_time) %in% times]
+  genes <- lapply(less_time, function(x) rownames(x))
+  common_up <- Reduce(intersect, genes)
+  uniprot.consistent <- do.call(cbind,lapply(less_time, function(x)
+  {
+    x[x$ENSEMBLID %in% common_up,]
+  }))
+  print(ncol(uniprot.consistent))
+  if (length(uniprot.consistent) > 0)
+  {
+    id_cols <- seq(2,ncol(uniprot.consistent),2)
+    k <- uniprot.consistent[,id_cols]
+    colnames(k) <- gsub(".*[.]","",colnames(k))
+    print(dim(k))
+    write.table(k,filenames,quote=FALSE,sep="\t")
+    uniprot.consistent
+  }
+}
+
+
+SaveCombined(by_time.37827,"GSE37827.gene_perturbation.7-12-24hr.txt",c("7h","12h","24h"))
+intersect.37827 <- SaveCombined(by_time.37827,"GSE37827.gene_perturbation.24hr+.txt",c("30h","36h","48h","54h","60h","72h"))
+intersect.56677 <- SaveCombined(by_time.56677,"GSE56677.gene_perturbation.7-12-24hr.txt",c("7h","12h","24h"))
+
+````
+
+
+
+
+```{r}
+
+
+Convert2Uniprot <- function(by_time)
+{
+  up <- lapply(by_time, function(x)
+  {
+    x <- merge(biomart,x,by="ENSEMBLID")
+  })
+}
+
+up.gse37827 <- Convert2Uniprot(by_time.37827)
+up.gse56677 <- Convert2Uniprot(by_time.56677)
+
+
+
+library(OmnipathR)
+library(igraph)
+
+interactions <- import_Omnipath_Interactions(filter_databases=
+                      c("ARN","CA1","CancerCellMap","DeathDomain","Guide2Pharma","Macrophage",
+                        "NRF2ome","PDZbase","SignaLink3","Signor","SPIKE","TRIP","BioGRID",
+                        "DIP","HPRD","InnateDB","IntAct","MatrixDB","MPPI","Vidal HI-III"))
+
+```
+
+
+```{r}
+
+
+GetDirectedGraph <- function(data)
+{
+  graphs <- lapply(data, function(time)
+  {
+    colnames(time)[3] <- "Pscore"
+    subset <- interactions[interactions$source %in% time$UNIPROTID & 
+                         interactions$target %in% time$UNIPROTID, ]
+    if (nrow(time) > 1)
+    {
+      OPI_g <- interaction_graph(interactions = subset)
+      OPI_g <- simplify(OPI_g, remove.multiple = TRUE, remove.loops = TRUE,edge.attr.comb = igraph_opt("edge.attr.comb"))
+      vertex_attr(OPI_g, "Pscore") <- time$Pscore
+      OPI_g
+    }
+  })
+  names(graphs) <- names(data)
+  graphs <- graphs[!sapply(graphs, is.null)]
+  graphs
+}
+ 
+
+gse37827.g <- GetDirectedGraph(up.gse37827)
+gse56677.g <- GetDirectedGraph(up.gse56677)
+
+
+```
+
+
+
+
+
+
+
+```{r}
+
+plot_degree_distribution <- function(graph,name) 
+{
+  d = degree(graph, mode = "all")
+  dd = degree.distribution(graph, mode = "all", cumulative = FALSE)
+  degree = 1:max(d)
+  probability = dd[-1]*length(d)
+  nonzero.position = which(probability != 0)
+  probability = probability[nonzero.position]
+  degree = degree[nonzero.position]
+  if (length(probability) > 0 & length(degree) > 0)
+  {
+    plot(probability ~ degree, log = "xy", xlab = "Degree (log)", ylab = "Number of Nodes",
+       col = 1, main = name)
+  }
+}
+
+# https://igraph.org/c/doc/igraph-Community.html#idm383434440480 <- module detection algs
+SaveDegreeDistPlots <- function(data)
+{
+  lapply(seq(1,length(data)), function(i)
+  {
+    title <- paste("Degree Distribution :- ",names(data)[[i]],"rs",sep="")
+    png(filename=paste("degree_distribution.",".",names(data)[[i]],"rs",".png",sep=""))
+    plot_degree_distribution(data[[i]],title)
+    dev.off()
+  })
+}
+
+
+SaveDegreeDistPlots(gse37827.g)
+SaveDegreeDistPlots(gse56677.g)
+
+
+PlotGraphWithCluster <- function(g)
+{
+  if ( length(V(g)) > 0 & length(E(g)) > 0)
+  {
+    g <- delete.vertices(g,degree(g)==0)
+    g <- simplify(g, remove.multiple = T, remove.loops = T, edge.attr.comb=c(weight="sum", type="ignore") )
+    g <- as.undirected(g,mode="collapse",edge.attr.comb = igraph_opt("edge.attr.comb"))
+    c <- cluster_louvain(g)
+    l <- layout_with_fr(g)
+    c_keep_ids <- as.numeric(names(sizes(c)[sizes(c) >= 5]))
+    c_keep_v_idxs <- which(c$membership %in% c_keep_ids)
+    g_sub <- induced_subgraph(g, V(g)[c_keep_v_idxs])
+    c_sub <- c
+    c_sub$names <- c$names[c_keep_v_idxs]
+    c_sub$membership <- c$membership[c_keep_v_idxs]
+    c_sub$vcount <- length(c_sub$names)
+    c_sub$modularity <- modularity(g_sub, c_sub$membership, E(g_sub)$weight)
+    plot(c_sub, g_sub,col = membership(c)[c_keep_v_idxs],layout = l[c_keep_v_idxs, ],
+         mark.border = rainbow(length(communities(c)), alpha = 1)[c_keep_ids],
+         mark.col = rainbow(length(communities(c)), alpha = 0.3)[c_keep_ids],vertex.label = NA,vertex.size = 5)
+  }
+}
+
+
+lapply(gse37827.g, function(to_plot) PlotGraphWithCluster(to_plot))
+lapply(gse56677.g, function(to_plot) PlotGraphWithCluster(to_plot))
+
+
+```
+
+
+
+
+
+
+
+
+
+

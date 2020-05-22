@@ -1,0 +1,60 @@
+
+
+
+
+# Tasks
+
+
+1. We need someone to perform some network statistics/measures on each network at each time point. Most importantly, the indentification of Hub Genes and Authority genes, extending this to look at what genes are in the vicinty and what modules/pathways do they interact with. Plot as time series these changes over time. Homophily and Assortivity would also be of interest to provide insight into what processes Hub & Authority genes are associated with or the LFCs they are associated with. Identify Hub genes that are consistently dysregulated between the different networks --> look into SARS-CoV-2 DE data, are they present there? Do they match up with the SARS-CoV-2 network construction. Probably 2 people for this.
+
+2. Someone to investigate the modules themselves, ie what pathways/processes do the genes in each module relate to? Best ways to do module selection? Could compute some kind of mean module abundance/LFC and view how this changes over time. Ie which modules are up-regualted over time/down-regulated over time/remain consistent. Identify modules consistently dysregulated between time points and between cell lines/viruses.
+
+3. Overlap networks to generate consensus networks between MERS & SARS and SARS-CoV-2 https://www.frontiersin.org/articles/10.3389/fgene.2016.00031/full (Me)
+
+4. Investigate the evolution of the networks over time.
+
+5. Identify proteins that SARS-CoV-2 is known to interact with.
+
+
+
+FrontiersFrontiers
+
+* Need to do the module/gene-set gene ontology --> improve module detection? 
+
+* Investigate how modules change over time 
+  * Modules consistently de-regulated
+  * https://arxiv.org/pdf/1512.01344.pdf
+* Overlap networks/modules/pathways ~ Module LFC change over time
+
+* Calculate network statistic change over time ~ https://kateto.net/netscix2016.html
+  * Identify Hub & Authority Genes - nodes & pathways in the vicinity of these ~ look into the genes themselves, pathways etc
+  * Centrality & Centralization ~ PageRank etc
+  * Assortivity & Homophily ~ Associate with LFC, with gene ontology etc
+  * Degree distribution
+  * Distances & Paths
+
+
+
+* Time series construction
+  * https://www.bioconductor.org/packages/release/bioc/vignettes/GRENITS/inst/doc/GRENITS_package.pdf
+  * https://www.biorxiv.org/content/10.1101/587170v1.full.pdf
+  * https://arxiv.org/pdf/1704.06548.pdf
+
+
+
+### Goals
+
+1. We need someone to perform some network statistics/measures on each network at each time point. Most importantly, the indentification of Hub Genes and Authority genes, extending this to look at what genes are in the vicinty and what modules/pathways do they interact with. Plot as time series these changes over time. Homophily and Assortivity would also be of interest to provide insight into what processes Hub & Authority genes are associated with or the LFCs they are associated with. Identify Hub genes that are consistently dysregulated between the different networks --> look into SARS-CoV-2 DE data, are they present there? Do they match up with the SARS-CoV-2 network construction. Probably 2 people for this.
+
+2. Someone to investigate the modules themselves, ie what pathways/processes do the genes in each module relate to? Best ways to do module selection? Could compute some kind of mean module abundance/LFC and view how this changes over time. Ie which modules are up-regualted over time/down-regulated over time/remain consistent. Identify modules consistently dysregulated between time points and between cell lines/viruses.
+
+3. Overlap networks to generate consensus networks between MERS & SARS and SARS-CoV-2 https://www.frontiersin.org/articles/10.3389/fgene.2016.00031/full (Me)
+
+
+
+
+
+
+
+
+

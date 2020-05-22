@@ -1,0 +1,199 @@
+---
+title: "Perturbation"
+author: "Euan_McDonnell"
+date: "22 May 2020"
+output: html_document
+---
+
+
+---
+title: "GeneMeta"
+author: "Euan_McDonnell"
+date: "21 May 2020"
+output: html_document
+---
+
+
+
+# Load Libraries and biomaRt ID conversion file
+
+```{r}
+library(OmnipathR)
+library(igraph)
+library("crossmeta")
+library("biomaRt")
+
+ensembl <- useMart("ensembl",dataset="hsapiens_gene_ensembl")
+biomart <- getBM(attributes=c('uniprot_gn_id','ensembl_gene_id'),mart = ensembl)[-1,]
+colnames(biomart) <- c("ENSEMBLID","UNIPROTID")
+
+```
+
+
+
+# Read in files from folder
+
+Data is read in as a list of data.frames each from the same experiment (GSEXXXXX) with each dataframe containg the Ensembl Gene IDs and Perturbation Scores. 
+
+```{r}
+
+# setwd("######## YOUR DIRECTORY ##########")
+ReadInForGraph <- function(gse_id)
+{
+  file.match <- paste(gse_id,".*.perturbation_time_series.",sep="")
+  readin <- lapply(list.files(pattern=file.match), function(file)
+  {
+    read.table(file,header=TRUE,row.names=1)
+  })
+}
+
+by_time.37827 <- ReadInForGraph("GSE37827") # SARS CALU3 DATASET
+by_time.56677 <- ReadInForGraph("GSE56677") # MERS CALU3 DATASET
+
+```
+
+
+
+# This converts IDs from Ensembl gene ids to Uniprot gene id
+
+```{r}
+
+
+Convert2Uniprot <- function(by_time)
+{
+  up <- lapply(by_time, function(x)
+  {
+    print(head(x))
+    x <- merge(biomart,x,by="ENSEMBLID")
+  })
+}
+
+up.gse37827 <- Convert2Uniprot(by_time.37827)
+up.gse56677 <- Convert2Uniprot(by_time.56677)
+
+```
+
+
+
+
+# Load in total PPI interaction data-sets from OmnipathR
+
+Use the OmnipathR API to download PPI interaction data and extract from this dataframe the genes present in each time-series specific dataframes. Converts these interaction dataframes to igraph objects
+
+```{r}
+
+interactions <- import_Omnipath_Interactions(filter_databases=
+                      c("ARN","CA1","CancerCellMap","DeathDomain","Guide2Pharma","Macrophage",
+                        "NRF2ome","PDZbase","SignaLink3","Signor","SPIKE","TRIP","BioGRID",
+                        "DIP","HPRD","InnateDB","IntAct","MatrixDB","MPPI","Vidal HI-III"))
+
+
+GetDirectedGraph <- function(data)
+{
+  graphs <- lapply(data, function(time)
+  {
+    colnames(time)[3] <- "Pscore"
+    subset <- interactions[interactions$source %in% time$UNIPROTID & 
+                         interactions$target %in% time$UNIPROTID, ]
+    if (nrow(time) > 1)
+    {
+      OPI_g <- interaction_graph(interactions = subset)
+      OPI_g <- simplify(OPI_g, remove.multiple = TRUE, remove.loops = TRUE,edge.attr.comb = igraph_opt("edge.attr.comb"))
+      vertex_attr(OPI_g, "Pscore") <- time$Pscore
+      OPI_g
+    }
+  })
+  names(graphs) <- names(data)
+  graphs <- graphs[!sapply(graphs, is.null)]
+  graphs
+}
+ 
+
+gse37827.g <- GetDirectedGraph(up.gse37827)
+gse56677.g <- GetDirectedGraph(up.gse56677)
+
+
+```
+
+
+
+
+# Plot Degree distribution & Networks
+
+Some functions to plot the degree distribution of networks and the networks themselves. 
+
+
+```{r}
+
+plot_degree_distribution <- function(graph,name) 
+{
+  d = degree(graph, mode = "all")
+  dd = degree.distribution(graph, mode = "all", cumulative = FALSE)
+  degree = 1:max(d)
+  probability = dd[-1]*length(d)
+  nonzero.position = which(probability != 0)
+  probability = probability[nonzero.position]
+  degree = degree[nonzero.position]
+  if (length(probability) > 0 & length(degree) > 0)
+  {
+    plot(probability ~ degree, log = "xy", xlab = "Degree (log)", ylab = "Number of Nodes",
+       col = 1, main = name)
+  }
+}
+
+# https://igraph.org/c/doc/igraph-Community.html#idm383434440480 <- module detection algs
+SaveDegreeDistPlots <- function(data)
+{
+  lapply(seq(1,length(data)), function(i)
+  {
+    title <- paste("Degree Distribution :- ",names(data)[[i]],"rs",sep="")
+    png(filename=paste("degree_distribution.",".",names(data)[[i]],"rs",".png",sep=""))
+    plot_degree_distribution(data[[i]],title)
+    dev.off()
+  })
+}
+
+
+SaveDegreeDistPlots(gse37827.g)
+SaveDegreeDistPlots(gse56677.g)
+
+
+PlotGraphWithCluster <- function(g)
+{
+  if ( length(V(g)) > 0 & length(E(g)) > 0)
+  {
+    g <- delete.vertices(g,degree(g)==0)
+    g <- simplify(g, remove.multiple = T, remove.loops = T, edge.attr.comb=c(weight="sum", type="ignore") )
+    g <- as.undirected(g,mode="collapse",edge.attr.comb = igraph_opt("edge.attr.comb"))
+    c <- cluster_louvain(g)
+    l <- layout_with_fr(g)
+    c_keep_ids <- as.numeric(names(sizes(c)[sizes(c) >= 5]))
+    c_keep_v_idxs <- which(c$membership %in% c_keep_ids)
+    g_sub <- induced_subgraph(g, V(g)[c_keep_v_idxs])
+    c_sub <- c
+    c_sub$names <- c$names[c_keep_v_idxs]
+    c_sub$membership <- c$membership[c_keep_v_idxs]
+    c_sub$vcount <- length(c_sub$names)
+    c_sub$modularity <- modularity(g_sub, c_sub$membership, E(g_sub)$weight)
+    plot(c_sub, g_sub,col = membership(c)[c_keep_v_idxs],layout = l[c_keep_v_idxs, ],
+         mark.border = rainbow(length(communities(c)), alpha = 1)[c_keep_ids],
+         mark.col = rainbow(length(communities(c)), alpha = 0.3)[c_keep_ids],vertex.label = NA,vertex.size = 5)
+  }
+}
+
+
+lapply(gse37827.g, function(to_plot) PlotGraphWithCluster(to_plot))
+lapply(gse56677.g, function(to_plot) PlotGraphWithCluster(to_plot))
+
+
+```
+
+
+
+
+```{r}
+
+write_graph(gse37827.g[[1]], "test.graph.save", format = c("edgelist"))
+
+```
+
